@@ -9,15 +9,20 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 # load the genre data
 df = pd.read_csv('spotify_data.csv')
 
+# Entfernen Sie die Anführungszeichen
+df['genre'] = df['genre'].str.replace('"', '')
+
 # remove any rows with missing genre data
 df['genre'].fillna('Unknown', inplace=True)
 
-# extract unique genres
-unique_genres = set(", ".join(df['genre']).split(", "))
+# Flattening-Operation durchführen
+all_genres = [genre for sublist in df['genre'].str.split(',') for genre in sublist]
+
+# Konvertieren Sie die Liste in ein Set, um doppelte Einträge zu entfernen
+unique_genres = set(all_genres)
+
 print(f"Number of unique genres: {len(unique_genres)}")
 print(unique_genres)
-
-
 
 # get embeddings for each genre
 genre_embeddings = {}
