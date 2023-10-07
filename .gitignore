@@ -1,2 +1,2 @@
 # ignore .venv dir and .env files
-global-exclude .venv .env
+global-exclude .venv .env .cache .gitignore
