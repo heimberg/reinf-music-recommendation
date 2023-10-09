@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 
 # music recommendation environment class (inheriting gym.Env)
+# defines the action and observation space as well as the step function including the reward
 class MusicRecommendationEnv(gym.Env):
     # constructor
     # data_path: path to the dataset
@@ -30,8 +31,16 @@ class MusicRecommendationEnv(gym.Env):
         # alternative: Discrete Space (https://gymnasium.farama.org/api/spaces/fundamental/#gymnasium.spaces.Discrete)
         self.observation_space = spaces.Box(low=low_limits, high=high_limits, dtype=np.float32)
     
+    # execute the given action and return new state and reward
     def step(self, action):
-        return NotImplemented
+        next_state = self.data.iloc[action][self.state_features].values
+        # reward if a liked song was chosen, else negative reward
+        reward = 1 if self.data.iloc[action]['liked_songs'] == 1 else -1
+        # set the new state
+        self.current_state = next_state
+        # TODO: check if done
+        done = False
+        return next_state, reward, done, {}
     
     # reset the environment to the initial state
     def reset(self):
