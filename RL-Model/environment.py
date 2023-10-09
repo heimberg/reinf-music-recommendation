@@ -1,6 +1,5 @@
 import gym
 from gym import spaces
-import pandas as pd
 import numpy as np
 
 # music recommendation environment class (inheriting gym.Env)
@@ -9,11 +8,11 @@ class MusicRecommendationEnv(gym.Env):
     # constructor
     # data_path: path to the dataset
     # state_features: list of features to be used as state (danceability,energy,speechiness,acousticness,valence,instrumentalness,PCA_1,PCA_2)
-    def __init__(self, data_path, state_features):
+    def __init__(self, data, state_features):
         super(MusicRecommendationEnv, self).__init__()
         
         # load the dataset
-        self.data = pd.read_csv(data_path)
+        self.data = data
         self.state_features = state_features
         self.current_state = None
         
@@ -33,7 +32,7 @@ class MusicRecommendationEnv(gym.Env):
     
     # execute the given action and return new state and reward
     def step(self, action):
-        next_state = self.data.iloc[action][self.state_features].values
+        next_state = self.data.iloc[action][self.state_features].values.astype('float32')
         # reward if a liked song was chosen, else negative reward
         reward = 1 if self.data.iloc[action]['liked_songs'] == 1 else -1
         # set the new state
@@ -42,7 +41,7 @@ class MusicRecommendationEnv(gym.Env):
         done = False
         return next_state, reward, done, {}
     
-    # reset the environment to the initial state
+    # reset the environment to the initial state (random state)
     def reset(self):
-        self.current_state = self.data.sample(1)[self.state_features].values[0]
+        self.current_state = self.data.sample(1)[self.state_features].values[0].astype('float32')
         return self.current_state

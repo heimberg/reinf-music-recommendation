@@ -1,5 +1,5 @@
 # configurations
-DATA_PATH = '../data-preparation/all_songs_compresed_embeddings.csv'
+DATA_PATH = '../data-preprocessing/data-preparation/all_songs_compressed_embeddings.csv'
 STATE_FEATURES = ['danceability','energy','speechiness','acousticness','valence','instrumentalness','PCA_1','PCA_2']
 
 # RL-Agent configurations
