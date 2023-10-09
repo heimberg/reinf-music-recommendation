@@ -15,6 +15,8 @@ class MusicRecommendationEnv(gym.Env):
         self.data = data
         self.state_features = state_features
         self.current_state = None
+        self.max_recommendations = 100  # needed for the done condition
+        self.current_step = 0
         
         # define the action space
         # action: choose the next song, for every song in the dataset
@@ -37,11 +39,16 @@ class MusicRecommendationEnv(gym.Env):
         reward = 1 if self.data.iloc[action]['liked_songs'] == 1 else -1
         # set the new state
         self.current_state = next_state
-        # TODO: check if done
-        done = False
+        # done by max_recommendations
+        self.current_step += 1
+        if self.current_step >= self.max_recommendations:
+            done = True
+        else:
+            done = False
         return next_state, reward, done, {}
     
     # reset the environment to the initial state (random state)
     def reset(self):
         self.current_state = self.data.sample(1)[self.state_features].values[0].astype('float32')
+        self.current_step = 0
         return self.current_state
