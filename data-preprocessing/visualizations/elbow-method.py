@@ -5,7 +5,7 @@ from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 
 # Load the embeddings
-df = pd.read_csv('genre_embeddings.csv')
+df = pd.read_csv('../genre_embeddings.csv')
 embeddings = np.array([eval(e) for e in df['Embedding'].values])
 
 # Apply PCA

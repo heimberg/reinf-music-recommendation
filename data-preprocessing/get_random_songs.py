@@ -16,7 +16,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id, 
 playlists = ['37i9dQZF1DX0XUsuxWHRQd', '37i9dQZF1DXdPec7aLTmlC', '37i9dQZF1DZ06evO2fOjra', '37i9dQZF1DXcZDD7cfEKhW', '37i9dQZF1DWT2jS7NwYPVI', '37i9dQZF1DX9WU5Losjsy8', '37i9dQZF1DXdcGcdKNYAG0', '37i9dQZF1DWVGjWxwGtpup', '37i9dQZF1DWYmmr74INQlb']
 
 # Check if CSV file exists to decide about the header
-write_header = not os.path.exists('spotify_playlist_features.csv')
+write_header = not os.path.exists('random_songs.csv')
 
 CHUNK_SIZE = 100
 WAIT_TIME = 5

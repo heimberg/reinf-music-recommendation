@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Read the CSVs
-liked_songs_df = pd.read_csv('spotify_data.csv')
+liked_songs_df = pd.read_csv('liked_songs.csv')
 random_songs_df = pd.read_csv('spotify_playlist_features.csv')
 
 # Remove duplicates

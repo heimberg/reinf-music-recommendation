@@ -60,4 +60,4 @@ def fetch_liked_songs_data():
 # put the data into a dataframe
 df = fetch_liked_songs_data()
 print(df.head())
-df.to_csv('spotify_data.csv', index=False)
+df.to_csv('liked_songs.csv', index=False)

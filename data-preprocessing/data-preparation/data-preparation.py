@@ -7,17 +7,19 @@ genre_embeddings['Embedding'] = genre_embeddings['Embedding'].apply(lambda x: as
 genre_embeddings = genre_embeddings.to_dict()['Embedding']
 
 # Load the data
-df = pd.read_csv('../spotify_data.csv')
+df = pd.read_csv('../combined_songs.csv')
 
 # Extract spotify features
 features = ['danceability', 'energy', 'speechiness', 'acousticness', 'valence', 'instrumentalness']
-data_continuous = df[features]
+
+# Make a copy of the dataframe to avoid SettingWithCopyWarning
+data_continuous = df[features].copy()
 
 # Scale features
 scaler = StandardScaler()
-data_scaled = scaler.fit_transform(data_continuous)
+data_scaled = pd.DataFrame(scaler.fit_transform(data_continuous), columns=data_continuous.columns)
 
-
+# Embed genres
 def get_embedding_for_genre(genre_str):
     if not isinstance(genre_str, str):
         return [0] * len(genre_embeddings[list(genre_embeddings.keys())[0]])
@@ -30,14 +32,14 @@ def get_embedding_for_genre(genre_str):
     
     return avg_embedding
 
-
 df['genre_embedding'] = df['genre'].apply(get_embedding_for_genre)
 
 # Convert the embedding list to individual columns
 embedding_df = pd.DataFrame(df['genre_embedding'].tolist(), columns=[f'embed_{i}' for i in range(len(df['genre_embedding'].iloc[0]))])
 
-# Combine the scaled continuous data with the embeddings
-data_combined = pd.concat([df, embedding_df], axis=1)
+# Drop the original columns and combine the scaled continuous data with the embeddings
+df = df.drop(features + ['genre_embedding'], axis=1)
+data_combined = pd.concat([df, data_scaled, embedding_df], axis=1)
 
-# save the data to a csv
-data_combined.to_csv('spotify_data_processed.csv', index=False)
+# Save the data to a csv
+data_combined.to_csv('all_songs_processed.csv', index=False)

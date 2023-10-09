@@ -7,7 +7,7 @@ import os
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # load the genre data
-df = pd.read_csv('spotify_data.csv')
+df = pd.read_csv('combined_songs.csv')
 
 # Entfernen Sie die Anführungszeichen
 df['genre'] = df['genre'].str.replace('"', '')
