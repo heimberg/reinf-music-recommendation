@@ -20,6 +20,8 @@ class MusicRecommendationEnv(gym.Env):
         self.current_step = 0
         self.played_genres = [] # list of genres that were already played
         self.genre_memory = 10 # number of genres that are remembered
+        self.action_history = []
+        self.pca_history = []
                 
         # define the action space
         # action: choose the next song, for every song in the dataset
@@ -39,7 +41,8 @@ class MusicRecommendationEnv(gym.Env):
     def step(self, action):
         next_state = self.data.iloc[action][self.state_features].values.astype('float32')
         genre_distance_reward = self.calculate_pca_distance_reward(next_state[-2:])  # Last two values are PCA components (genre)
-        
+        self.action_history.append(action)
+        self.pca_history.append(next_state[-2:])
         
         # reward if a liked song was chosen, else negative reward
         reward = 1 if self.data.iloc[action]['liked_songs'] == 1 else -1

@@ -8,7 +8,7 @@ def evaluate_agent(agent, env, num_episodes=100):
         while not done:
             action, _ = agent.predict(state)
             state, reward, done, _ = env.step(action)
-            total_rewards += reward
+            episode_reward += reward
             
         total_rewards += episode_reward
     
