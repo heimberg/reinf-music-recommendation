@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 
 def plot_action_distribution(actions, filename):
-    plt.hist(actions, bins=len(set(actions)), density=True)
+    scalar_actions = [a[0] for a in actions]
+    plt.hist(scalar_actions, bins=len(set(scalar_actions)), density=True)
     plt.title("Action Distribution")
     plt.xlabel("Action")
     plt.ylabel("Frequency")

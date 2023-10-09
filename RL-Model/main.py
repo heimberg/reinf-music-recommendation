@@ -31,7 +31,7 @@ def main():
         print('Training agent...')
         for i in range(0, config.TRAINING_TIMESTEPS, config.EVALUATION_INTERVAL):
             agent.train(timesteps=config.EVALUATION_INTERVAL)
-            average_reward = evaluate_agent(agent, env)
+            average_reward = evaluate_agent(agent, env, config.EVALUATION_INTERVAL)
             print(f'Average reward after {i+config.EVALUATION_INTERVAL} timesteps: {average_reward}')
             rewards.append(average_reward)
         
