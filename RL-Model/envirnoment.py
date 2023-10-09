@@ -46,6 +46,3 @@ class MusicRecommendationEnv(gym.Env):
     def reset(self):
         self.current_state = self.data.sample(1)[self.state_features].values[0]
         return self.current_state
-
-    def render(self, mode='human'):
-        return NotImplemented
