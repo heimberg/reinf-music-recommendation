@@ -7,6 +7,7 @@ LEARNING_RATE = 0.001
 GAMMA = 0.99 # discount factor
 BUFFER_SIZE = 10_000 # replay buffer size
 BL3_POLICY = "MlpPolicy"
+GENRE_DISTANCE_WEIGHT = 10
 # epsilon-greedy exploration
 EXPLORATION_EPSILON_INITIAL = 1.0 # initial value of epsilon
 EXPLORATION_EPSILON_FINAL = 0.02 # final value of epsilon

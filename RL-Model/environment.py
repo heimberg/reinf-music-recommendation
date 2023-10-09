@@ -1,6 +1,7 @@
 import gym
 from gym import spaces
 import numpy as np
+import config
 
 # music recommendation environment class (inheriting gym.Env)
 # defines the action and observation space as well as the step function including the reward
@@ -17,7 +18,9 @@ class MusicRecommendationEnv(gym.Env):
         self.current_state = None
         self.max_recommendations = 100  # needed for the done condition
         self.current_step = 0
-        
+        self.played_genres = [] # list of genres that were already played
+        self.genre_memory = 10 # number of genres that are remembered
+                
         # define the action space
         # action: choose the next song, for every song in the dataset
         self.action_space = spaces.Discrete(len(self.data))
@@ -35,8 +38,19 @@ class MusicRecommendationEnv(gym.Env):
     # execute the given action and return new state and reward
     def step(self, action):
         next_state = self.data.iloc[action][self.state_features].values.astype('float32')
+        genre_distance_reward = self.calculate_pca_distance_reward(next_state[-2:])  # Last two values are PCA components (genre)
+        
+        
         # reward if a liked song was chosen, else negative reward
         reward = 1 if self.data.iloc[action]['liked_songs'] == 1 else -1
+        # reward playing songs from different genres
+        reward += genre_distance_reward  # Add the pca distance reward
+        
+        # Update the played genre history
+        self.played_genres.append(next_state[-2:])
+        if len(self.played_genres) > self.genre_memory:
+            self.played_genres.pop(0)  # Remove the oldest PCA value if history is too long
+
         # set the new state
         self.current_state = next_state
         # done by max_recommendations
@@ -52,3 +66,19 @@ class MusicRecommendationEnv(gym.Env):
         self.current_state = self.data.sample(1)[self.state_features].values[0].astype('float32')
         self.current_step = 0
         return self.current_state
+    
+    def calculate_pca_distance_reward(self, current_genre):
+        # If no songs have been played yet, return a reward of 0
+        if not self.played_genres:
+            return 0
+        
+        # Calculate the average of the played genres
+        average_genre = np.mean(self.played_genres, axis=0)
+        
+        # Calculate the euclidean distance between the current and the average genre
+        distance = np.linalg.norm(current_genre - average_genre)
+        
+        # Convert distance to  reward. The larger the distance, the higher the reward
+        distance_reward = config.GENRE_DISTANCE_WEIGHT * distance
+        return distance_reward
+        
