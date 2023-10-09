@@ -1,5 +1,6 @@
 from stable_baselines3 import DQN
 from stable_baselines3.common.vec_env import DummyVecEnv
+import config
 
 class MusicRecommendationAgent:
     # initalize the agent, load the model if a path is given
@@ -8,7 +9,16 @@ class MusicRecommendationAgent:
         if model_path:
             self.model = DQN.load(model_path, env=self.env)
         else:
-            self.model = DQN("MlpPolicy", self.env, verbose=1)
+            self.model = DQN(
+                policy=config.BL3_POLICY, # DQN Architecture, default MLP Policy (Multi-Layer Perceptron)
+                env=self.env,
+                learning_rate=config.LEARNING_RATE,
+                buffer_size=config.BUFFER_SIZE, # max size of the replay buffer (experience replay)
+                exploration_final_eps=config.EXPLORATION_EPSILON_FINAL,
+                exploration_fraction=config.EXPLORATION_FRACTION,
+                exploration_initial_eps=config.EXPLORATION_EPSILON_INITIAL,
+            )
+                
 
     # train the agent for a given number of timesteps
     def train(self, timesteps=10000):
