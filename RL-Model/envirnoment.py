@@ -33,8 +33,10 @@ class MusicRecommendationEnv(gym.Env):
     def step(self, action):
         return NotImplemented
     
+    # reset the environment to the initial state
     def reset(self):
-        return NotImplemented
-    
+        self.current_state = self.data.sample(1)[self.state_features].values[0]
+        return self.current_state
+
     def render(self, mode='human'):
         return NotImplemented
