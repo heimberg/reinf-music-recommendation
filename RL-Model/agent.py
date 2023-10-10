@@ -32,6 +32,7 @@ class MusicRecommendationAgent:
     def load(self, path):
         self.model = DQN.load(path, env=self.env)
 
-    # predict the action for a given state
-    def predict(self, state):
-        return self.model.predict(state)
+    # predict the action for a given state, added deterministic flag to set exploration on/off during evaluation
+    def predict(self, state, deterministic=False):
+        return self.model.predict(state, deterministic=deterministic)
+
