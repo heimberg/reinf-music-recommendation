@@ -14,7 +14,12 @@ EXPLORATION_EPSILON_FINAL = 0.1 # final value of epsilon
 EXPLORATION_FRACTION = 0.3 # fraction of training timesteps during which the epsilon factor is decreased to epsilon_final
 TRAINING_TIMESTEPS = 1000 # number of training timesteps
 EVALUATION_INTERVAL = 10  # test the agent every n timesteps
-NUM_EPOCHS = 10 # number of epochs with random start to train the agent
+NUM_EPOCHS = 5 # number of epochs to train the agent
+
+# rewards
+REWARD_FOR_LIKED_SONG = 1
+REWARD_FOR_UNLIKED_SONG = -1
+REWARD_FOR_SAME_GENRE = -2
 
 # load/save configurations
 MODEL_SAVE_PATH = 'models/rl_model.pkl'

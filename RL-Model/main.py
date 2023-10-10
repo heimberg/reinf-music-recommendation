@@ -42,10 +42,12 @@ def main():
             print(f'Training for timesteps {i}-{i+config.EVALUATION_INTERVAL}...')
             # Train agent on interval and get average reward
             agent.train(timesteps=config.EVALUATION_INTERVAL)
-            average_reward = evaluate_agent(agent, env, config.EVALUATION_INTERVAL, evaluate=True)
+            average_reward, actions_taken = evaluate_agent(agent, env, config.EVALUATION_INTERVAL, evaluate=True)
             rewards.append(average_reward)
             print(f'Average reward after {i+config.EVALUATION_INTERVAL} timesteps: {average_reward:.2f}')
-            
+            # Analyze the actions taken by the agent
+            unique_actions = set(action.item() for episode in actions_taken for action in episode)
+            print(f"Unique actions taken during this interval: {unique_actions}")
             # Checkpoint model if its the best so far
             if average_reward > best_avg_reward:
                 best_avg_reward = average_reward

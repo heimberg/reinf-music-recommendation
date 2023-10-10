@@ -26,10 +26,6 @@ def plot_songs_on_pca_map(pca_values, liked_flags):
     # Anzeigen des Plots
     plt.show()
 
-import matplotlib.pyplot as plt
-import datetime
-import config
-
 def plot_learning_curve(all_epoch_rewards):
     plt.figure(figsize=(12, 6))
     timesteps = range(0, config.TRAINING_TIMESTEPS, config.EVALUATION_INTERVAL)
@@ -42,9 +38,10 @@ def plot_learning_curve(all_epoch_rewards):
     plt.legend()
     plt.grid(True)
 
-    # Adding hyperparameters to the plot
-    hyperparameters = vars(config)
+    # Get the hyperparameters from the config file
+    hyperparameters = {k: getattr(config, k) for k in dir(config) if not k.startswith('_')}
     hyperparam_str = "\n".join([f"{key}: {value}" for key, value in hyperparameters.items()])
+    # add the hyperparameters as text to the plot
     plt.figtext(1.02, 0.5, "Hyperparameters:\n" + hyperparam_str, horizontalalignment='left', verticalalignment='center', fontsize=9, bbox=dict(facecolor='white', alpha=0.5))
     
     # Saving the figure with current date and time
