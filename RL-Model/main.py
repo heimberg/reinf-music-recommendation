@@ -43,17 +43,6 @@ def main():
         plot_action_distribution(env.action_history, action_filename)
         plot_pca_heatmap(env.pca_history, pca_filename)
 
-    # Plot training rewards
-    plt.figure(figsize=(10, 6))
-    for epoch, rewards in enumerate(all_epoch_rewards):
-        plt.plot(range(0, config.TRAINING_TIMESTEPS, config.EVALUATION_INTERVAL), rewards, label=f'Epoch {epoch + 1}')
-    plt.xlabel("Training Timesteps")
-    plt.ylabel("Average Reward")
-    plt.title("Training Progress of Music Recommendation Agent over Multiple Epochs")
-    plt.legend()
-    plt.grid(True)
-    plt.savefig(config.PLOT_SAVE_PATH)
-    plt.show()
     
     # save the trained model (last model)
     print('Saving model...')
