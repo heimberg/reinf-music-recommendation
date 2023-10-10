@@ -8,6 +8,8 @@ GAMMA = 0.99 # discount factor
 BUFFER_SIZE = 2000 # replay buffer size
 BL3_POLICY = "MlpPolicy"
 GENRE_DISTANCE_WEIGHT = 1
+CONTEXT_WINDOW_SIZE = 10 # number of songs that are remembered
+
 # epsilon-greedy exploration
 EXPLORATION_EPSILON_INITIAL = 1.0 # initial value of epsilon
 EXPLORATION_EPSILON_FINAL = 0.1 # final value of epsilon
@@ -19,7 +21,7 @@ NUM_EPOCHS = 5 # number of epochs to train the agent
 # rewards
 REWARD_FOR_LIKED_SONG = 1
 REWARD_FOR_UNLIKED_SONG = -1
-REWARD_FOR_SAME_GENRE = -2
+REWARD_FOR_SAME_SONG = -5
 
 # load/save configurations
 MODEL_SAVE_PATH = 'models/rl_model.pkl'
