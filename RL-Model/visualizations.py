@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import datetime
+import config
 
 def plot_songs_on_pca_map(pca_values, liked_flags):
     # Konvertieren Sie die Liste der Tupel in separate Listen für x und y
@@ -24,5 +26,36 @@ def plot_songs_on_pca_map(pca_values, liked_flags):
     # Anzeigen des Plots
     plt.show()
 
+import matplotlib.pyplot as plt
+import datetime
+import config
 
+def plot_learning_curve(all_epoch_rewards):
+    plt.figure(figsize=(12, 6))
+    timesteps = range(0, config.TRAINING_TIMESTEPS, config.EVALUATION_INTERVAL)
+    for epoch, rewards in enumerate(all_epoch_rewards):
+        plt.plot(timesteps, rewards, label=f'Epoch {epoch+1}')
+    
+    plt.title('Learning Curve')
+    plt.xlabel('Timesteps')
+    plt.ylabel('Average Reward')
+    plt.legend()
+    plt.grid(True)
+
+    # Adding hyperparameters to the plot
+    hyperparameters = vars(config)
+    hyperparam_str = "\n".join([f"{key}: {value}" for key, value in hyperparameters.items()])
+    plt.figtext(1.02, 0.5, "Hyperparameters:\n" + hyperparam_str, horizontalalignment='left', verticalalignment='center', fontsize=9, bbox=dict(facecolor='white', alpha=0.5))
+    
+    # Saving the figure with current date and time
+    current_time = datetime.datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
+    filename = f"learning_curve_{current_time}.png"
+    plt.tight_layout()
+    # bbox_inches='tight' to cut off the white space around the plot
+    plt.savefig(filename, bbox_inches='tight')
+    plt.show()
+
+    return filename 
+
+    
 
