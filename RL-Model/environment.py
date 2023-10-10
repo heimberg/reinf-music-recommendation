@@ -47,7 +47,7 @@ class MusicRecommendationEnv(gym.Env):
         self.pca_history.append(current_song[['PCA_1', 'PCA_2']].values)
         self.liked_history.append(current_song['liked_songs'])
         # reward if a liked song was chosen, else negative reward
-        reward = 1 if self.data.iloc[action]['liked_songs'] == 1 else -2
+        reward = 1 if self.data.iloc[action]['liked_songs'] == 1 else -1
         # negative reward if the same song was chosen already in the last 10 steps
         if action in self.action_history[-10:]:
             reward -= 2
@@ -72,7 +72,7 @@ class MusicRecommendationEnv(gym.Env):
             done = False
         
         # Log details:
-        # print(f"Action taken: {action}")
+        print(f"Action taken: {action}")
         # print(f"Reward received: {reward}")
         # print(f"Current state: {self.current_state}")
 
