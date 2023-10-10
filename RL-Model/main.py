@@ -3,8 +3,7 @@ from utils import load_data
 from environment import MusicRecommendationEnv
 from agent import MusicRecommendationAgent
 from test import evaluate_agent
-from visualizations import plot_pca_heatmap, plot_action_distribution, plot_rewards
-import matplotlib.pyplot as plt
+from visualizations import plot_songs_on_pca_map
 
 def main():
     # load the dataset and convert the state features to float32
@@ -33,15 +32,10 @@ def main():
             agent.train(timesteps=config.EVALUATION_INTERVAL)
             average_reward = evaluate_agent(agent, env, config.EVALUATION_INTERVAL)
             print(f'Average reward after {i+config.EVALUATION_INTERVAL} timesteps: {average_reward}')
-            rewards.append(average_reward)
+            
         
         all_epoch_rewards.append(rewards)
         
-        # At the end of each epoch, visualize the data
-        action_filename = f"epoch_{epoch + 1}_actions"
-        pca_filename = f"epoch_{epoch + 1}_genre_heatmap"
-        plot_action_distribution(env.action_history, action_filename)
-        plot_pca_heatmap(env.pca_history, pca_filename)
 
     
     # save the trained model (last model)

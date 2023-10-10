@@ -1,6 +1,7 @@
 from stable_baselines3 import DQN
 from stable_baselines3.common.vec_env import DummyVecEnv
 import config
+import numpy as np
 
 class MusicRecommendationAgent:
     # initalize the agent, load the model if a path is given
@@ -33,5 +34,9 @@ class MusicRecommendationAgent:
         self.model = DQN.load(path, env=self.env)
 
     # predict the action for a given state
-    def predict(self, state):
-        return self.model.predict(state)
+    def predict(self, state, deterministic=False):
+        if np.random.rand() < self.model.exploration_rate and not deterministic:
+            return self.env.action_space.sample(), None
+        else:
+            return self.model.predict(state, deterministic=deterministic)
+

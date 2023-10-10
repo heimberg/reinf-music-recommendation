@@ -1,30 +1,28 @@
 import matplotlib.pyplot as plt
 
-def plot_action_distribution(actions, filename):
-    num_bins = len(set([int(a) for a in actions]))
-    plt.hist(actions, bins=num_bins, density=True)
-    plt.title("Action Distribution")
-    plt.xlabel("Action")
-    plt.ylabel("Frequency")
-    plt.savefig('./visualizations/' + filename + '.png')
-
-
-def plot_rewards(rewards, filename):
-    plt.plot(rewards)
-    plt.title("Reward over Time")
-    plt.xlabel("Time step")
-    plt.ylabel("Reward")
-    plt.savefig('./visualizations/' + filename + '.png')
-
-def plot_pca_heatmap(pca_values, filename):
-    pca_1_values = [x[0] for x in pca_values]
-    pca_2_values = [x[1] for x in pca_values]
+def plot_songs_on_pca_map(pca_values, liked_flags):
+    # Konvertieren Sie die Liste der Tupel in separate Listen für x und y
+    x_values = [x[0] for x in pca_values]
+    y_values = [x[1] for x in pca_values]
     
-    plt.hist2d(pca_1_values, pca_2_values, bins=(50, 50), cmap=plt.cm.jet)
-    plt.title("PCA Genre Heatmap")
+    # Erstellen Sie eine Farbliste basierend auf "liked_songs"
+    colors = ['red' if liked else 'blue' for liked in liked_flags]
+    
+    # Erstellen Sie einen Scatter-Plot
+    plt.scatter(x_values, y_values, c=colors, alpha=0.5)
+    
+    # Beschriftungen und Titel hinzufügen
     plt.xlabel("PCA 1")
     plt.ylabel("PCA 2")
-    plt.colorbar()
-    plt.savefig('./visualizations/' + filename + '.png')
+    plt.title("Songs on PCA Map")
+    
+    # Legende hinzufügen
+    plt.legend(handles=[plt.Line2D([0], [0], marker='o', color='w', label='Liked Songs', markersize=10, markerfacecolor='red'),
+                        plt.Line2D([0], [0], marker='o', color='w', label='Other Songs', markersize=10, markerfacecolor='blue')],
+               loc='upper right')
+    
+    # Anzeigen des Plots
+    plt.show()
+
 
 

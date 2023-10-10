@@ -16,12 +16,13 @@ class MusicRecommendationEnv(gym.Env):
         self.data = data
         self.state_features = state_features
         self.current_state = None
-        self.max_recommendations = 100  # needed for the done condition
+        self.max_recommendations = 20  # needed for the done condition
         self.current_step = 0
         self.played_genres = [] # list of genres that were already played
         self.genre_memory = 10 # number of genres that are remembered
         self.action_history = []
         self.pca_history = []
+        self.liked_history = []
                 
         # define the action space
         # action: choose the next song, for every song in the dataset
@@ -40,14 +41,21 @@ class MusicRecommendationEnv(gym.Env):
     # execute the given action and return new state and reward
     def step(self, action):
         next_state = self.data.iloc[action][self.state_features].values.astype('float32')
-        genre_distance_reward = self.calculate_pca_distance_reward(next_state[-2:])  # Last two values are PCA components (genre)
-        self.action_history.append(action)
-        self.pca_history.append(next_state[-2:])
+        # genre_distance_reward = self.calculate_pca_distance_reward(next_state[-2:])  # Last two values are PCA components (genre)
         
+        current_song = self.data.iloc[action]
+        self.pca_history.append(current_song[['PCA_1', 'PCA_2']].values)
+        self.liked_history.append(current_song['liked_songs'])
         # reward if a liked song was chosen, else negative reward
-        reward = 1 if self.data.iloc[action]['liked_songs'] == 1 else -1
+        reward = 1 if self.data.iloc[action]['liked_songs'] == 1 else -2
+        # negative reward if the same song was chosen already in the last 10 steps
+        if action in self.action_history[-10:]:
+            reward -= 2
         # reward playing songs from different genres
-        reward += genre_distance_reward  # Add the pca distance reward
+        # reward += genre_distance_reward  # Add the pca distance reward
+        
+        # update action history
+        self.action_history.append(action)
         
         # Update the played genre history
         self.played_genres.append(next_state[-2:])
@@ -62,11 +70,19 @@ class MusicRecommendationEnv(gym.Env):
             done = True
         else:
             done = False
+        
+        # Log details:
+        # print(f"Action taken: {action}")
+        # print(f"Reward received: {reward}")
+        # print(f"Current state: {self.current_state}")
+
         return next_state, reward, done, {}
     
     # reset the environment to the initial state (random state)
     def reset(self):
-        self.current_state = self.data.sample(1)[self.state_features].values[0].astype('float32')
+        # init random state
+        self.action_history = []
+        self.current_state = self.data.sample()[self.state_features].values.astype('float32')[0]
         self.current_step = 0
         return self.current_state
     
@@ -78,8 +94,8 @@ class MusicRecommendationEnv(gym.Env):
         # Calculate the average of the played genres
         average_genre = np.mean(self.played_genres, axis=0)
         
-        # Calculate the euclidean distance between the current and the average genre
-        distance = np.linalg.norm(current_genre - average_genre)
+        # Calculate the squared distance between the current genre and the average genre
+        distance = np.sum((current_genre - average_genre) ** 2)
         
         # Convert distance to  reward. The larger the distance, the higher the reward
         distance_reward = config.GENRE_DISTANCE_WEIGHT * distance
