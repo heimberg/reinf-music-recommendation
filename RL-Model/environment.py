@@ -25,6 +25,7 @@ class MusicRecommendationEnv(gym.Env):
         self.pca_history = []
         self.liked_history = []
         self.context_window = deque(maxlen=config.CONTEXT_WINDOW_SIZE) # list of the last x songs that were played
+        self.played_songs_set = set()
                 
         # define the action space
         # action: choose the next song, for every song in the dataset
@@ -44,6 +45,18 @@ class MusicRecommendationEnv(gym.Env):
     
     # execute the given action and return new state and reward
     def step(self, action):
+        # Check if song has been played within the context window
+        if action.item() in self.played_songs_set:
+            reward = config.REWARD_FOR_SAME_SONG
+        else:
+            # if not, add song to played_songs_set
+            self.played_songs_set.add(action.item())
+
+            # context window: add the next state and remove the oldest state
+            if len(self.played_songs_set) > config.CONTEXT_WINDOW_SIZE:
+                oldest_song = self.action_history[-config.CONTEXT_WINDOW_SIZE]
+                self.played_songs_set.remove(oldest_song)
+            
         next_state = self.data.iloc[action][self.state_features].values.astype('float32')
         # genre_distance_reward = self.calculate_pca_distance_reward(next_state[-2:])  # Last two values are PCA components (genre)
         
@@ -54,9 +67,7 @@ class MusicRecommendationEnv(gym.Env):
         # rewards
         # reward if a liked song was chosen, else negative reward
         reward = config.REWARD_FOR_LIKED_SONG if self.data.iloc[action]['liked_songs'] == 1 else config.REWARD_FOR_UNLIKED_SONG
-        # negative reward if the same song was chosen already in the last x steps
-        if action in self.action_history[-100:]:
-            reward += config.REWARD_FOR_SAME_SONG
+        
         # reward playing songs from different genres
         # reward += genre_distance_reward  # Add the pca distance reward
         
@@ -89,6 +100,7 @@ class MusicRecommendationEnv(gym.Env):
     # reset the environment to the initial state (random state)
     def reset(self):
         # Initialize/reset histories and counters
+        self.played_songs_set.clear()
         self.action_history = []
         self.current_step = 0
 
