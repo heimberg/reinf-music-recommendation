@@ -13,7 +13,7 @@ LEARNING_RATE = 0.0001
 GAMMA = 0.99 # discount factor
 BUFFER_SIZE = 10_000 # replay buffer size
 BL3_POLICY = "MlpPolicy"
-CONTEXT_WINDOW_SIZE = 1000 # number of songs that are remembered
+CONTEXT_WINDOW_SIZE = 2000 # number of songs that are remembered
 
 # epsilon-greedy exploration
 EXPLORATION_EPSILON_INITIAL = 1.0 # initial value of epsilon

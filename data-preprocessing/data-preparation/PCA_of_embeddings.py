@@ -1,3 +1,10 @@
+"""
+PCA_of_embeddings.py
+--------------------
+Module that applies PCA to song embeddings to reduce their dimensionality.
+The compressed embeddings are saved in a new CSV for further processing.
+"""
+
 import pandas as pd
 from sklearn.decomposition import PCA
 

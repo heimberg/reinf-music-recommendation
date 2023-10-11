@@ -1,8 +1,8 @@
 """
 find_unique_genres.py
 ---------------------
-Utility script for processing genre data from song datasets.
-Loads data, identifies unique genres, and retrieves embeddings for each genre using OpenAI's API.
+Script for processing the 'combined_songs.csv' dataset to identify and list unique music genres.
+Additionally, retrieves embeddings for each genre using the OpenAI API.
 """
 
 import pandas as pd

@@ -52,12 +52,15 @@ class MusicRecommendationEnv(gym.Env):
     
     # execute the given action and return new state and reward
     def step(self, action):
+        # Ensure the action is within the allowable range
+        action = min(action, len(self.data) - 1)
+        action_value = action.item() if hasattr(action, 'item') else action
         # Check if song has been played within the context window, if yes, return a negative reward
-        if action.item() in self.played_songs_set:
+        if action_value in self.played_songs_set:
             reward = config.REWARD_FOR_SAME_SONG
         else:
             # if not, add song to played_songs_set and calculate reward
-            self.played_songs_set.add(action.item())
+            self.played_songs_set.add(action_value)
             reward = config.REWARD_FOR_LIKED_SONG if self.data.iloc[action]['liked_songs'] == 1 else config.REWARD_FOR_UNLIKED_SONG
             # context window: add the next state and remove the oldest state
             if len(self.played_songs_set) > config.CONTEXT_WINDOW_SIZE:
