@@ -51,7 +51,7 @@ def main():
             # Checkpoint model if its the best so far
             if average_reward > best_avg_reward:
                 best_avg_reward = average_reward
-                agent.save(f"best_model_epoch{epoch + 1}.pth")
+                agent.save(config.MODEL_SAVE_PATH + f"best_model_epoch{epoch + 1}.pkl")
 
         all_epoch_rewards.append(rewards)
 
@@ -61,7 +61,7 @@ def main():
     # save the final model
     try:
         print('Saving final model...')
-        agent.save(config.MODEL_SAVE_PATH)
+        agent.save(config.MODEL_SAVE_PATH + "final_model.pkl")
         print('Model saved successfully.')
     except Exception as e:
         print(f"Error saving model: {e}")

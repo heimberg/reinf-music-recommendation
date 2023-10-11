@@ -46,7 +46,7 @@ def plot_learning_curve(all_epoch_rewards):
     
     # Saving the figure with current date and time
     current_time = datetime.datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
-    filename = f"learning_curve_{current_time}.png"
+    filename = config.PLOT_SAVE_PATH + f"learning_curve_{current_time}.png"
     plt.tight_layout()
     # bbox_inches='tight' to cut off the white space around the plot
     plt.savefig(filename, bbox_inches='tight')
