@@ -45,31 +45,29 @@ class MusicRecommendationEnv(gym.Env):
     
     # execute the given action and return new state and reward
     def step(self, action):
-        # Check if song has been played within the context window
+        # Check if song has been played within the context window, if yes, return a negative reward
         if action.item() in self.played_songs_set:
             reward = config.REWARD_FOR_SAME_SONG
         else:
-            # if not, add song to played_songs_set
+            # if not, add song to played_songs_set and calculate reward
             self.played_songs_set.add(action.item())
-
+            reward = config.REWARD_FOR_LIKED_SONG if self.data.iloc[action]['liked_songs'] == 1 else config.REWARD_FOR_UNLIKED_SONG
             # context window: add the next state and remove the oldest state
             if len(self.played_songs_set) > config.CONTEXT_WINDOW_SIZE:
                 oldest_song = self.action_history[-config.CONTEXT_WINDOW_SIZE]
                 self.played_songs_set.remove(oldest_song)
             
         next_state = self.data.iloc[action][self.state_features].values.astype('float32')
-        # genre_distance_reward = self.calculate_pca_distance_reward(next_state[-2:])  # Last two values are PCA components (genre)
         
         current_song = self.data.iloc[action]
         self.pca_history.append(current_song[['PCA_1', 'PCA_2']].values)
         self.liked_history.append(current_song['liked_songs'])
         
         # rewards
-        # reward if a liked song was chosen, else negative reward
-        reward = config.REWARD_FOR_LIKED_SONG if self.data.iloc[action]['liked_songs'] == 1 else config.REWARD_FOR_UNLIKED_SONG
-        
+
         # reward playing songs from different genres
-        # reward += genre_distance_reward  # Add the pca distance reward
+        genre_distance_reward = self.calculate_pca_distance_reward(next_state[-2:])  # Last two values are PCA components (genre)
+        reward += genre_distance_reward  # Add the pca distance reward
         
         # update action history
         self.action_history.append(action)
