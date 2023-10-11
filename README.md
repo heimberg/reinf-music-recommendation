@@ -28,7 +28,6 @@ Dateien:
 - `environment.py`: Das Musikempfehlungs-Environment inklusive der Rewards
 - `main.py`: Hauptskript zum Trainieren des RL-Agents
 - `test.py`: Skript zum Testen/Evaluieren des RL-Agents
-- `utils.py`: Hilfsfunktionen zum Laden der Daten und zum Speichern von Modellen
 - `visualizations.py`: Tools zum Plotten und Visualisieren
 
 
