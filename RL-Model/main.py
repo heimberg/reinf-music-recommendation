@@ -1,5 +1,5 @@
 import config
-from utils import load_data
+import pandas as pd
 from environment import MusicRecommendationEnv
 from agent import MusicRecommendationAgent
 from test import evaluate_agent
@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 def main():
     try:
         print('Loading dataset...')
-        data = load_data(config.DATA_PATH)
+        data = pd.read_csv(config.DATA_PATH)
         data[config.STATE_FEATURES] = data[config.STATE_FEATURES].astype('float32')
         print('Dataset loaded successfully.')
         print(data[config.STATE_FEATURES].dtypes)
