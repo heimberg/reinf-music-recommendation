@@ -1,3 +1,10 @@
+"""
+combine-song-data.py
+--------------------
+Utility script for processing and combining song datasets.
+Reads data, cleans by removing duplicates and missing values, combines, and saves the result as CSV.
+"""
+
 import pandas as pd
 
 # Read the CSVs

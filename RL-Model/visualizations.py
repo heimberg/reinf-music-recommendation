@@ -1,3 +1,10 @@
+"""
+visualizations.py
+-----------------
+Module providing visualization utilities for the music recommendation system.
+Includes functions for plotting songs on PCA maps and plotting the learning curve.
+"""
+
 import matplotlib.pyplot as plt
 import datetime
 import config

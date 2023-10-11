@@ -1,3 +1,10 @@
+"""
+get_random_songs.py
+-------------------
+Script for fetching random songs from predefined Spotify playlists using the spotipy library.
+Provides functionality to retrieve tracks from a given playlist and store them.
+"""
+
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import pandas as pd

@@ -1,3 +1,10 @@
+"""
+agent.py
+--------
+Module for music recommendation using the DQN algorithm from stable_baselines3.
+Defines the MusicRecommendationAgent class for initializing, training, and making predictions.
+"""
+
 from stable_baselines3 import DQN
 from stable_baselines3.common.vec_env import DummyVecEnv
 import config

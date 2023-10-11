@@ -4,6 +4,13 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 
+"""
+elbow-method.py
+---------------
+Module for determining the optimal number of clusters for k-means clustering using the elbow method.
+Visualizes the results using a plot, helping in identifying the point where adding more clusters doesn't significantly reduce the sum of squared distances.
+"""
+
 # Load the embeddings
 df = pd.read_csv('../genre_embeddings.csv')
 embeddings = np.array([eval(e) for e in df['Embedding'].values])

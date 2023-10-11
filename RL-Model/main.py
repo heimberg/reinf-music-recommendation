@@ -1,3 +1,10 @@
+"""
+main.py
+-------
+Main driver module for the music recommendation system.
+Manages dataset loading, environment and agent setup, training, and evaluation.
+"""
+
 import config
 import pandas as pd
 from environment import MusicRecommendationEnv

@@ -1,3 +1,10 @@
+"""
+check_data.py
+-------------
+Module providing utility functions to inspect and manipulate song data.
+Includes functionality to check the distribution of liked songs and to discard a fraction of them.
+"""
+
 import pandas as pd
 
 def check_liked_songs_distribution(filename):

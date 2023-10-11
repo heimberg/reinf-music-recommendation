@@ -1,3 +1,10 @@
+"""
+get_my_liked_songs.py
+---------------------
+Utility script for fetching a user's liked songs from Spotify.
+Uses the spotipy library to interface with the Spotify API and retrieve song data.
+"""
+
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import pandas as pd

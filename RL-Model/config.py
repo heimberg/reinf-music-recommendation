@@ -1,3 +1,9 @@
+"""
+config.py
+---------
+Module containing configurations for data paths, RL-agent parameters, and reward definitions.
+"""
+
 # configurations
 DATA_PATH = '../data-preprocessing/data-preparation/all_songs_compressed_embeddings.csv'
 STATE_FEATURES = ['danceability','energy','speechiness','acousticness','valence','instrumentalness','PCA_1','PCA_2']

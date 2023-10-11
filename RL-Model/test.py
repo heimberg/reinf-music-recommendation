@@ -1,3 +1,10 @@
+"""
+test.py
+-------
+Module containing utility functions for evaluating the performance of the music recommendation agent.
+Offers insights into the agent's average reward over multiple episodes and the actions taken.
+"""
+
 def evaluate_agent(agent, env, num_episodes=100, evaluate=False):
     total_rewards = 0
     all_actions = []  # List to store actions taken by the agent

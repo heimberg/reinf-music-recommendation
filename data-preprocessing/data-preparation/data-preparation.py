@@ -1,3 +1,10 @@
+"""
+data-preparation.py
+-------------------
+Module handling the data preparation process for the song data.
+Includes tasks like loading genre embeddings, extracting features, scaling features, and genre embedding.
+"""
+
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 import ast

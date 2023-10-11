@@ -1,3 +1,10 @@
+"""
+environment.py
+--------------
+Module defining the music recommendation environment for the RL agent.
+Provides the MusicRecommendationEnv class, inheriting from gym.Env, and specifies action and observation spaces.
+"""
+
 import gym
 from gym import spaces
 import numpy as np
