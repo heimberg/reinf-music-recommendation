@@ -11,20 +11,7 @@ from stable_baselines3.common.callbacks import BaseCallback, EvalCallback
 from stable_baselines3.common.monitor import Monitor
 import config
 
-class StopTrainingOnMaxRewardCallback(BaseCallback):
-    def __init__(self, reward_threshold):
-        super(StopTrainingOnMaxRewardCallback, self).__init__()
-        self.reward_threshold = reward_threshold
-
-    def _on_step(self) -> bool:
-        is_training_continue = True
-        if self.model.ep_info_buffer:
-            mean_reward = sum([ep_info["r"] for ep_info in self.model.ep_info_buffer]) / len(self.model.ep_info_buffer)
-            if mean_reward >= self.reward_threshold:
-                print(f"Stopping training because mean reward {mean_reward} reached the set threshold {self.reward_threshold}")
-                is_training_continue = False
-        return is_training_continue
-    
+  
 class MusicRecommendationAgent:
     # initalize the agent (new DQN-Model), load existing model if a path is given
     def __init__(self, env, model_path=None):
@@ -46,9 +33,9 @@ class MusicRecommendationAgent:
 
     # train the agent for a given number of timesteps
     def train(self, eval_env, timesteps=config.TRAINING_TIMESTEPS):
-        stop_on_max_reward = StopTrainingOnMaxRewardCallback(reward_threshold=200)
+        stop_on_max_reward = StopTrainingOnMaxRewardCallback(reward_threshold=config.REWARD_THRESHOLD)
         eval_callback = EvalCallback(eval_env, best_model_save_path='./logs/best_model',
-                                     log_path='./logs/results', eval_freq=10000,
+                                     log_path='./logs/results', eval_freq=config.LOG_EVAL_FREQUENCY,
                                      deterministic=True, render=False)
         self.model.learn(total_timesteps=timesteps, callback=[eval_callback, stop_on_max_reward])
         
@@ -66,5 +53,16 @@ class MusicRecommendationAgent:
     def load(self, path):
         self.model = DQN.load(path, env=self.env)
 
-    
+class StopTrainingOnMaxRewardCallback(BaseCallback):
+    def __init__(self, reward_threshold):
+        super(StopTrainingOnMaxRewardCallback, self).__init__()
+        self.reward_threshold = reward_threshold
 
+    def _on_step(self) -> bool:
+        is_training_continue = True
+        if self.model.ep_info_buffer:
+            mean_reward = sum([ep_info["r"] for ep_info in self.model.ep_info_buffer]) / len(self.model.ep_info_buffer)
+            if mean_reward >= self.reward_threshold:
+                print(f"Stopping training because mean reward {mean_reward} reached the set threshold {self.reward_threshold}")
+                is_training_continue = False
+        return is_training_continue
