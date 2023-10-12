@@ -45,9 +45,9 @@ class MusicRecommendationEnv(gym.Env):
     
     # execute the given action and return new state and reward
     def step(self, action):
-        print(f'Running in {self.mode} mode.')
-        print(f'Step {self.current_step} of {self.max_recommendations}')
-        print(f'Action taken: {action}')
+        # print(f'Running in {self.mode} mode.')
+        # print(f'Step {self.current_step} of {self.max_recommendations}')
+        # print(f'Action taken: {action}')
         next_state = self._update_state(action)
         reward = self._calculate_reward(action)
         done = self._is_done()
@@ -83,7 +83,7 @@ class MusicRecommendationEnv(gym.Env):
         return self._get_current_state()
     
     def _calculate_reward(self, action):
-        print("Size of played_songs_set:", len(self.played_songs_set))
+        # print("Size of played_songs_set:", len(self.played_songs_set))
         # TODO: Reimplement reward for genre distance
 
         if action in self.played_songs_set:

@@ -43,15 +43,14 @@ def main():
         for i in range(0, config.TRAINING_TIMESTEPS, config.EPISODE_LENGTH):
             print(f'Training for timesteps {i}-{i+config.EPISODE_LENGTH}...')
             agent.train(timesteps=config.EPISODE_LENGTH)
-            input("Press Enter to continue.")
             # Evaluate on the evaluation environment
-            average_reward, actions_taken = evaluate_agent(agent, eval_env, config.EPISODE_LENGTH, evaluate=True)
-            print("Actions taken Type: ", type(actions_taken))
+            print('Evaluating...')
+            average_reward, actions_taken = evaluate_agent(agent, eval_env, config.NUMBER_OF_EVALUATIONS, evaluate=True)
             rewards.append(average_reward)
             print(f'Average reward after {i+config.EPISODE_LENGTH} timesteps: {average_reward:.2f}')
             
-            unique_actions = set(action.item() for episode in actions_taken for action in episode)
-            print(f"Unique actions taken during this interval: {unique_actions}")
+            # unique_actions = set(action for episode in actions_taken for action in episode)
+            # print(f"Unique actions taken during this interval: {unique_actions}")
             
             if average_reward > best_avg_reward:
                 best_avg_reward = average_reward

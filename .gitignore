@@ -3,3 +3,7 @@
 .env 
 .cache/ 
 .gitignore
+RL-Model/logs/
+RL-Model/models/
+RL-Model/visualizations/
+RL-Model/__pycache__/

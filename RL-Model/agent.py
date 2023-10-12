@@ -24,12 +24,13 @@ class MusicRecommendationAgent:
                 exploration_final_eps=config.EXPLORATION_EPSILON_FINAL,
                 exploration_fraction=config.EXPLORATION_FRACTION,
                 exploration_initial_eps=config.EXPLORATION_EPSILON_INITIAL,
+                tensorboard_log=config.TENSORBOARD_LOG_DIR
             )
                 
 
     # train the agent for a given number of timesteps
     def train(self, timesteps=config.TRAINING_TIMESTEPS):
-        self.model.learn(total_timesteps=timesteps)
+        self.model.learn(total_timesteps=timesteps, log_interval=1)
         
     # predict the action for a given state
     def predict(self, state, deterministic=False):
