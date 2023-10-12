@@ -9,8 +9,7 @@ import config
 import pandas as pd
 from environment import MusicRecommendationEnv
 from agent import MusicRecommendationAgent
-from test import evaluate_agent
-from visualizations import plot_learning_curve
+from stable_baselines3.common.monitor import Monitor
 
 
 def main():
@@ -24,49 +23,16 @@ def main():
         return
     
     # Shuffle the dataset
-    data_shuffled = data.sample(frac=1, random_state=42)
-
-
-    all_epoch_rewards = []
-
-    # Create environments and agent
+    data_shuffled = data.sample(frac=1).reset_index(drop=True)
     train_env = MusicRecommendationEnv(data_shuffled, config.STATE_FEATURES, mode='train')
-    eval_env = MusicRecommendationEnv(data_shuffled, config.STATE_FEATURES, mode='eval')
-    agent = MusicRecommendationAgent(train_env)
-    best_avg_reward = float('-inf')
-
-    for epoch in range(config.NUM_EPOCHS):
-        print(f"\\n==== Epoch {epoch + 1}/{config.NUM_EPOCHS} ====")
-        train_env.reset()
-        rewards = []
-
-        for i in range(0, config.TRAINING_TIMESTEPS, config.EPISODE_LENGTH):
-            print(f'Training for timesteps {i}-{i+config.EPISODE_LENGTH}...')
-            agent.train(timesteps=config.EPISODE_LENGTH)
-            # Evaluate on the evaluation environment
-            print('Evaluating...')
-            average_reward, actions_taken = evaluate_agent(agent, eval_env, config.NUMBER_OF_EVALUATIONS, evaluate=True)
-            rewards.append(average_reward)
-            print(f'Average reward after {i+config.EPISODE_LENGTH} timesteps: {average_reward:.2f}')
-            
-            # unique_actions = set(action for episode in actions_taken for action in episode)
-            # print(f"Unique actions taken during this interval: {unique_actions}")
-            
-            if average_reward > best_avg_reward:
-                best_avg_reward = average_reward
-                agent.save(config.MODEL_SAVE_PATH + f"best_model_epoch{epoch + 1}.pkl")
-
-        all_epoch_rewards.append(rewards)
-
-    filename = plot_learning_curve(all_epoch_rewards)
-    print(f"Learning curve saved as {filename}")
+    eval_env = Monitor(MusicRecommendationEnv(data_shuffled, config.STATE_FEATURES, mode='eval'))
     
-    try:
-        print('Saving final model...')
-        agent.save(config.MODEL_SAVE_PATH + "final_model.pkl")
-        print('Model saved successfully.')
-    except Exception as e:
-        print(f"Error saving model: {e}")
+    # Agent initialisieren
+    agent = MusicRecommendationAgent(train_env)
+
+    # Hier beginnt der Trainingsprozess, der Evaluierungsprozess wird über Callbacks gesteuert
+    agent.train(eval_env, timesteps=config.TRAINING_TIMESTEPS)
+
 
 if __name__ == '__main__':
     main()

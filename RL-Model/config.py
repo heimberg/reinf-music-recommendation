@@ -14,15 +14,15 @@ GAMMA = 0.99 # discount factor
 BUFFER_SIZE = 10_000 # replay buffer size
 BL3_POLICY = "MlpPolicy"
 CONTEXT_WINDOW_SIZE = 100 # number of songs that are remembered
-TRAINING_TIMESTEPS = 10_000 # number of training timesteps
-EPISODE_LENGTH = 250 # maximum number of recommendations until the episode is done (same for eval)
+TRAINING_TIMESTEPS = 500_000 # number of training timesteps
+EPISODE_LENGTH = 500 # maximum number of recommendations until the episode is done (same for eval)
 NUMBER_OF_EVALUATIONS = 2 # number of evaluations
 NUM_EPOCHS = 5 # number of epochs to train the agent
 
 # epsilon-greedy exploration
 EXPLORATION_EPSILON_INITIAL = 1.0 # initial value of epsilon
 EXPLORATION_EPSILON_FINAL = 0.25 # final value of epsilon
-EXPLORATION_FRACTION = 0.2 # fraction of training timesteps during which the epsilon factor is decreased to epsilon_final
+EXPLORATION_FRACTION = 0.3 # fraction of training timesteps during which the epsilon factor is decreased to epsilon_final
 
 
 

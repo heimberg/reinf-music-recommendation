@@ -7,8 +7,24 @@ Defines the MusicRecommendationAgent class for initializing, training, and makin
 
 from stable_baselines3 import DQN
 from stable_baselines3.common.vec_env import DummyVecEnv
+from stable_baselines3.common.callbacks import BaseCallback, EvalCallback
+from stable_baselines3.common.monitor import Monitor
 import config
 
+class StopTrainingOnMaxRewardCallback(BaseCallback):
+    def __init__(self, reward_threshold):
+        super(StopTrainingOnMaxRewardCallback, self).__init__()
+        self.reward_threshold = reward_threshold
+
+    def _on_step(self) -> bool:
+        is_training_continue = True
+        if self.model.ep_info_buffer:
+            mean_reward = sum([ep_info["r"] for ep_info in self.model.ep_info_buffer]) / len(self.model.ep_info_buffer)
+            if mean_reward >= self.reward_threshold:
+                print(f"Stopping training because mean reward {mean_reward} reached the set threshold {self.reward_threshold}")
+                is_training_continue = False
+        return is_training_continue
+    
 class MusicRecommendationAgent:
     # initalize the agent (new DQN-Model), load existing model if a path is given
     def __init__(self, env, model_path=None):
@@ -29,8 +45,12 @@ class MusicRecommendationAgent:
                 
 
     # train the agent for a given number of timesteps
-    def train(self, timesteps=config.TRAINING_TIMESTEPS):
-        self.model.learn(total_timesteps=timesteps, log_interval=1)
+    def train(self, eval_env, timesteps=config.TRAINING_TIMESTEPS):
+        stop_on_max_reward = StopTrainingOnMaxRewardCallback(reward_threshold=200)
+        eval_callback = EvalCallback(eval_env, best_model_save_path='./logs/best_model',
+                                     log_path='./logs/results', eval_freq=10000,
+                                     deterministic=True, render=False)
+        self.model.learn(total_timesteps=timesteps, callback=[eval_callback, stop_on_max_reward])
         
     # predict the action for a given state
     def predict(self, state, deterministic=False):

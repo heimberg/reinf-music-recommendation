@@ -5,8 +5,8 @@ Module defining the music recommendation environment for the RL agent.
 Provides the MusicRecommendationEnv class, inheriting from gym.Env, and specifies action and observation spaces.
 """
 
-import gym
-from gym import spaces
+import gymnasium as gym
+from gymnasium import spaces
 import numpy as np
 import config
 from collections import deque
@@ -48,16 +48,19 @@ class MusicRecommendationEnv(gym.Env):
         # print(f'Running in {self.mode} mode.')
         # print(f'Step {self.current_step} of {self.max_recommendations}')
         # print(f'Action taken: {action}')
-        next_state = self._update_state(action)
+        observation = self._update_state(action)
         reward = self._calculate_reward(action)
-        done = self._is_done()
+        info = self._get_info()
+        terminated = self.current_step >= self.max_recommendations
+        truncated = False
         # Add the selected action (song) to the set of played songs
         self.played_songs_set.add(int(action))
         
-        return next_state, reward, done, {}
+        return observation, reward, terminated, truncated, info
     
     # reset the environment to the initial state (random state)
-    def reset(self):
+    def reset(self, seed=None, options=None):
+        super().reset(seed=seed)
         # Initialize/reset histories and counters
         self.played_songs_set.clear()
         self.action_history = []
@@ -71,8 +74,10 @@ class MusicRecommendationEnv(gym.Env):
         # Sample a random initial state
         initial_state = self.data.sample()[self.state_features].values.astype('float32')[0]
         self.context_window.append(initial_state)
+        observation = self._get_current_state()
+        info = self._get_info()
         
-        return self._get_current_state()
+        return observation, info
 
     def _update_state(self, action):
         self.current_step += 1
@@ -92,12 +97,12 @@ class MusicRecommendationEnv(gym.Env):
             return config.REWARD_FOR_LIKED_SONG
         else:
             return config.PENALTY_FOR_UNLIKED_SONG
-    def _is_done(self):
-        return self.current_step >= self.max_recommendations
     
     def _get_current_state(self):
         # Flatten the context window and concatenate to form the current state
         return np.concatenate([state for state in self.context_window])
 
-
+    def _get_info(self):
+        return {'action_history': self.action_history}
+    
         
