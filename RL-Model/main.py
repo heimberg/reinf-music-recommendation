@@ -23,21 +23,16 @@ def main():
         print(f"Error loading dataset: {e}")
         return
     
-    # Splitting the dataset into training and evaluation sets
+    # Shuffle the dataset
     data_shuffled = data.sample(frac=1, random_state=42)
-    train_size = int(0.8 * len(data_shuffled))
-    train_data = data_shuffled[:train_size]
-    eval_data = data_shuffled[train_size:]
+
 
     all_epoch_rewards = []
 
     # Create environments and agent
-    train_env = MusicRecommendationEnv(train_data, config.STATE_FEATURES)
-    eval_env = MusicRecommendationEnv(eval_data, config.STATE_FEATURES)
+    train_env = MusicRecommendationEnv(data_shuffled, config.STATE_FEATURES, mode='train')
+    eval_env = MusicRecommendationEnv(data_shuffled, config.STATE_FEATURES, mode='eval')
     agent = MusicRecommendationAgent(train_env)
-
-    print("Training with hyperparameters:", vars(config))
-
     best_avg_reward = float('-inf')
 
     for epoch in range(config.NUM_EPOCHS):
@@ -45,14 +40,15 @@ def main():
         train_env.reset()
         rewards = []
 
-        for i in range(0, config.TRAINING_TIMESTEPS, config.EVALUATION_INTERVAL):
-            print(f'Training for timesteps {i}-{i+config.EVALUATION_INTERVAL}...')
-            agent.train(timesteps=config.EVALUATION_INTERVAL)
-            
+        for i in range(0, config.TRAINING_TIMESTEPS, config.EPISODE_LENGTH):
+            print(f'Training for timesteps {i}-{i+config.EPISODE_LENGTH}...')
+            agent.train(timesteps=config.EPISODE_LENGTH)
+            input("Press Enter to continue.")
             # Evaluate on the evaluation environment
-            average_reward, actions_taken = evaluate_agent(agent, eval_env, config.EVALUATION_INTERVAL, evaluate=True)
+            average_reward, actions_taken = evaluate_agent(agent, eval_env, config.EPISODE_LENGTH, evaluate=True)
+            print("Actions taken Type: ", type(actions_taken))
             rewards.append(average_reward)
-            print(f'Average reward after {i+config.EVALUATION_INTERVAL} timesteps: {average_reward:.2f}')
+            print(f'Average reward after {i+config.EPISODE_LENGTH} timesteps: {average_reward:.2f}')
             
             unique_actions = set(action.item() for episode in actions_taken for action in episode)
             print(f"Unique actions taken during this interval: {unique_actions}")

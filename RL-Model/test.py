@@ -4,6 +4,8 @@ test.py
 Module containing utility functions for evaluating the performance of the music recommendation agent.
 Offers insights into the agent's average reward over multiple episodes and the actions taken.
 """
+import numpy as np
+
 
 def evaluate_agent(agent, env, num_episodes=100, evaluate=False):
     total_rewards = 0
@@ -15,7 +17,11 @@ def evaluate_agent(agent, env, num_episodes=100, evaluate=False):
         done = False
         
         while not done:
-            action, _ = agent.predict(state, deterministic=evaluate)
+            action_array, _ = agent.predict(state, deterministic=evaluate)
+            # Extract action value with ugly workaround for type errors
+            action_value = action_array.item() if isinstance(action_array, np.ndarray) and action_array.ndim == 0 else action_array[0]
+            
+            action = int(action_value)
             episode_actions.append(action)
             state, reward, done, _ = env.step(action)
             total_rewards += reward

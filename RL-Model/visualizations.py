@@ -35,7 +35,7 @@ def plot_songs_on_pca_map(pca_values, liked_flags):
 
 def plot_learning_curve(all_epoch_rewards):
     plt.figure(figsize=(12, 6))
-    timesteps = range(0, config.TRAINING_TIMESTEPS, config.EVALUATION_INTERVAL)
+    timesteps = range(0, config.TRAINING_TIMESTEPS, config.EPISODE_LENGTH)
     for epoch, rewards in enumerate(all_epoch_rewards):
         plt.plot(timesteps, rewards, label=f'Epoch {epoch+1}')
     

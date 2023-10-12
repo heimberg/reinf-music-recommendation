@@ -10,7 +10,7 @@ from stable_baselines3.common.vec_env import DummyVecEnv
 import config
 
 class MusicRecommendationAgent:
-    # initalize the agent, load the model if a path is given
+    # initalize the agent (new DQN-Model), load existing model if a path is given
     def __init__(self, env, model_path=None):
         self.env = DummyVecEnv([lambda: env])
         if model_path:
@@ -28,8 +28,14 @@ class MusicRecommendationAgent:
                 
 
     # train the agent for a given number of timesteps
-    def train(self, timesteps=10000):
+    def train(self, timesteps=config.TRAINING_TIMESTEPS):
         self.model.learn(total_timesteps=timesteps)
+        
+    # predict the action for a given state
+    def predict(self, state, deterministic=False):
+        # deterministic: if True, the action with the highest probability is chosen
+        predict = self.model.predict(state, deterministic=deterministic)
+        return predict
 
     # save the trained model to a given path
     def save(self, path):
@@ -39,7 +45,5 @@ class MusicRecommendationAgent:
     def load(self, path):
         self.model = DQN.load(path, env=self.env)
 
-    # predict the action for a given state, added deterministic flag to set exploration on/off during evaluation
-    def predict(self, state, deterministic=False):
-        return self.model.predict(state, deterministic=deterministic)
+    
 
