@@ -8,7 +8,7 @@ Defines the MusicRecommendationAgent class for initializing, training, and makin
 from stable_baselines3 import DQN
 from stable_baselines3.common.vec_env import DummyVecEnv
 from stable_baselines3.common.callbacks import BaseCallback, EvalCallback
-from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.logger import HParam
 import config
 
   
@@ -37,7 +37,7 @@ class MusicRecommendationAgent:
         eval_callback = EvalCallback(eval_env, best_model_save_path='./logs/best_model',
                                      log_path='./logs/results', eval_freq=config.LOG_EVAL_FREQUENCY,
                                      deterministic=True, render=False)
-        self.model.learn(total_timesteps=timesteps, callback=[eval_callback, stop_on_max_reward])
+        self.model.learn(total_timesteps=timesteps, callback=[eval_callback, stop_on_max_reward, HParamCallback()])
         
     # predict the action for a given state
     def predict(self, state, deterministic=False):
@@ -66,3 +66,46 @@ class StopTrainingOnMaxRewardCallback(BaseCallback):
                 print(f"Stopping training because mean reward {mean_reward} reached the set threshold {self.reward_threshold}")
                 is_training_continue = False
         return is_training_continue
+    
+# log hyperparameters and metrics to Tensorboard
+# from https://stable-baselines3.readthedocs.io/en/master/guide/tensorboard.html
+class HParamCallback(BaseCallback):
+    """
+    Saves the hyperparameters and metrics at the start of the training, and logs them to TensorBoard.
+    """
+
+    def _on_training_start(self) -> None:
+        hparam_dict = {
+            "algorithm": self.model.__class__.__name__,
+            "learning rate": self.model.learning_rate,
+            "gamma": self.model.gamma,
+            "buffer size": self.model.buffer_size,
+            "exploration fraction": self.model.exploration_fraction,
+            "exploration initial eps": self.model.exploration_initial_eps,
+            "exploration final eps": self.model.exploration_final_eps,
+            "policy": config.BL3_POLICY,
+            "context window size": config.CONTEXT_WINDOW_SIZE,
+            "training timesteps": config.TRAINING_TIMESTEPS,
+            "episode length": config.EPISODE_LENGTH,
+            "number of evaluations": config.NUMBER_OF_EVALUATIONS,
+            "epochs": config.NUM_EPOCHS,
+            "reward for liked song": config.REWARD_FOR_LIKED_SONG,
+            "penalty for unliked song": config.PENALTY_FOR_UNLIKED_SONG,
+            "penalty for same song": config.PENALTY_FOR_SAME_SONG,
+            "genre distance weight": config.GENRE_DISTANCE_WEIGHT,
+            "reward threshold": config.REWARD_THRESHOLD,
+        }
+        # define the metrics that will appear in the `HPARAMS` Tensorboard tab by referencing their tag
+        # Tensorbaord will find & display metrics from the `SCALARS` tab
+        metric_dict = {
+            "rollout/ep_len_mean": 0,
+            "train/value_loss": 0.0,
+        }
+        self.logger.record(
+            "hparams",
+            HParam(hparam_dict, metric_dict),
+            exclude=("stdout", "log", "json", "csv"),
+        )
+
+    def _on_step(self) -> bool:
+        return True

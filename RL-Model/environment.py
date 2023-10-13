@@ -32,7 +32,6 @@ class MusicRecommendationEnv(gym.Env):
         # define the action space
         # action: choose the next song, for every song in the dataset
         self.action_space = spaces.Discrete(len(self.data))
-        
         # set low and high limits for the observation space depending on the state features (0-1 / -1-1)
         # adjust for the context window size
         low_limits = np.tile(np.array(self.data[state_features].min()), config.CONTEXT_WINDOW_SIZE)

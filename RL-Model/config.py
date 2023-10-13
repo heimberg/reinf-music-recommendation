@@ -9,29 +9,27 @@ DATA_PATH = '../data-preprocessing/data-preparation/all_songs_compressed_embeddi
 STATE_FEATURES = ['danceability','energy','speechiness','acousticness','valence','instrumentalness','PCA_1','PCA_2']
 
 # RL-Agent configurations
-LEARNING_RATE = 0.0001
-GAMMA = 0.99 # discount factor
-BUFFER_SIZE = 10_000 # replay buffer size
+LEARNING_RATE = 0.00001
+GAMMA = 0.9 # discount factor
+BUFFER_SIZE = 10_000 # replay buffer size (experience replay)
 BL3_POLICY = "MlpPolicy"
-CONTEXT_WINDOW_SIZE = 100 # number of songs that are remembered
+CONTEXT_WINDOW_SIZE = 500 # number of songs that are remembered
 TRAINING_TIMESTEPS = 500_000 # number of training timesteps
 EPISODE_LENGTH = 500 # maximum number of recommendations until the episode is done (same for eval)
-NUMBER_OF_EVALUATIONS = 2 # number of evaluations
-NUM_EPOCHS = 5 # number of epochs to train the agent
 
 # epsilon-greedy exploration
-EXPLORATION_EPSILON_INITIAL = 1.0 # initial value of epsilon
-EXPLORATION_EPSILON_FINAL = 0.25 # final value of epsilon
-EXPLORATION_FRACTION = 0.3 # fraction of training timesteps during which the epsilon factor is decreased to epsilon_final
+EXPLORATION_EPSILON_INITIAL = 0.4 # initial value of epsilon
+EXPLORATION_EPSILON_FINAL = 0.15 # final value of epsilon
+EXPLORATION_FRACTION = 0.2 # fraction of training timesteps during which the epsilon factor is decreased to epsilon_final
 
 
 
 # rewards
-REWARD_FOR_LIKED_SONG = 2
+REWARD_FOR_LIKED_SONG = 1
 PENALTY_FOR_UNLIKED_SONG = -1
-PENALTY_FOR_SAME_SONG = -4
-GENRE_DISTANCE_WEIGHT = 2
-REWARD_THRESHOLD = 200
+PENALTY_FOR_SAME_SONG = -1
+GENRE_DISTANCE_WEIGHT = 1
+REWARD_THRESHOLD = 200 # stop training if the average reward exceeds this value
 
 # load/save configurations
 MODEL_SAVE_PATH = 'models/'
