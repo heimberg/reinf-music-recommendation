@@ -39,7 +39,7 @@ class MusicRecommendationAgent:
         eval_callback = EvalCallback(eval_env, best_model_save_path='./logs/best_model',
                                      log_path='./logs/results', eval_freq=config.LOG_EVAL_FREQUENCY,
                                      deterministic=True, render=False)
-        self.model.learn(total_timesteps=timesteps, callback=[eval_callback, stop_on_max_reward, HParamCallback()])
+        self.model.learn(total_timesteps=timesteps, progress_bar = True, callback=[eval_callback, stop_on_max_reward, HParamCallback()])
         
     # predict the action for a given state
     def predict(self, state, deterministic=False):
