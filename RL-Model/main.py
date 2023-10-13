@@ -41,4 +41,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    for i in range(10):
+        print(f"Run {i+1} of 10")
+        main()
