@@ -25,7 +25,7 @@ class MusicRecommendationEnv(gym.Env):
         self.max_recommendations = config.EPISODE_LENGTH  # needed for the done condition
         
         self.current_step = 0
-        self.played_songs_set = set()
+        self.played_songs_set = deque(maxlen=config.SONG_HISTORY_SIZE)
         self.action_history = []
         self.context_window = deque(maxlen=config.CONTEXT_WINDOW_SIZE)
         
@@ -53,7 +53,7 @@ class MusicRecommendationEnv(gym.Env):
         terminated = self.current_step >= self.max_recommendations
         truncated = False
         # Add the selected action (song) to the set of played songs
-        self.played_songs_set.add(int(action))
+        self.played_songs_set.append(int(action))
         
         return observation, reward, terminated, truncated, info
     
