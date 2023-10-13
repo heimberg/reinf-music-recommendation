@@ -13,9 +13,10 @@ LEARNING_RATE = 0.00001
 GAMMA = 0.9 # discount factor
 BUFFER_SIZE = 10_000 # replay buffer size (experience replay)
 BL3_POLICY = "MlpPolicy"
-CONTEXT_WINDOW_SIZE = 500 # number of songs that are remembered
-TRAINING_TIMESTEPS = 500_000 # number of training timesteps
+CONTEXT_WINDOW_SIZE = 2000 # number of songs that are remembered for the state
+TRAINING_TIMESTEPS = 60_000 # number of training timesteps
 EPISODE_LENGTH = 500 # maximum number of recommendations until the episode is done (same for eval)
+LEARNING_STARTS = 1000 # number of steps before the first update of the model (warmup)
 
 # epsilon-greedy exploration
 EXPLORATION_EPSILON_INITIAL = 0.4 # initial value of epsilon
@@ -34,4 +35,4 @@ SONG_HISTORY_SIZE = 20 # number of songs that are remembered for the same song p
 MODEL_SAVE_PATH = 'models/'
 PLOT_SAVE_PATH = 'visualizations/'
 TENSORBOARD_LOG_DIR = 'logs/'
-LOG_EVAL_FREQUENCY = 1000
+LOG_EVAL_FREQUENCY = 2500

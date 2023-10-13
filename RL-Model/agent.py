@@ -23,11 +23,13 @@ class MusicRecommendationAgent:
                 policy=config.BL3_POLICY, # DQN Architecture, default MLP Policy (Multi-Layer Perceptron)
                 env=self.env,
                 learning_rate=config.LEARNING_RATE,
+                learning_starts=config.LEARNING_STARTS, # number of steps before the first update
                 buffer_size=config.BUFFER_SIZE, # max size of the replay buffer (experience replay)
                 exploration_final_eps=config.EXPLORATION_EPSILON_FINAL,
                 exploration_fraction=config.EXPLORATION_FRACTION,
                 exploration_initial_eps=config.EXPLORATION_EPSILON_INITIAL,
-                tensorboard_log=config.TENSORBOARD_LOG_DIR
+                tensorboard_log=config.TENSORBOARD_LOG_DIR,
+                gamma=config.GAMMA # discount factor
             )
                 
 
