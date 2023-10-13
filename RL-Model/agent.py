@@ -87,13 +87,12 @@ class HParamCallback(BaseCallback):
             "context window size": config.CONTEXT_WINDOW_SIZE,
             "training timesteps": config.TRAINING_TIMESTEPS,
             "episode length": config.EPISODE_LENGTH,
-            "number of evaluations": config.NUMBER_OF_EVALUATIONS,
-            "epochs": config.NUM_EPOCHS,
             "reward for liked song": config.REWARD_FOR_LIKED_SONG,
             "penalty for unliked song": config.PENALTY_FOR_UNLIKED_SONG,
             "penalty for same song": config.PENALTY_FOR_SAME_SONG,
             "genre distance weight": config.GENRE_DISTANCE_WEIGHT,
             "reward threshold": config.REWARD_THRESHOLD,
+            "song history size": config.SONG_HISTORY_SIZE
         }
         # define the metrics that will appear in the `HPARAMS` Tensorboard tab by referencing their tag
         # Tensorbaord will find & display metrics from the `SCALARS` tab
